@@ -1,0 +1,36 @@
+name: Build Harris Matrix Editor V4 BAR EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Hent repository
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installer dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install reportlab
+
+      - name: Byg EXE
+        run: |
+          pyinstaller HarrisMatrixEditorV4BAR.spec
+
+      - name: Upload EXE som artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HarrisMatrixEditorV4BAR-Windows-EXE
+          path: dist/HarrisMatrixEditorV4BAR.exe
